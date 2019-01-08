@@ -1372,10 +1372,20 @@ DBGP_FUNC(property_get)
 	if (CMD_OPTION_SET('m')) {
 		options->max_data= strtol(CMD_OPTION_CHAR('m'), NULL, 10);
 	}
-	if (add_variable_node(*retval, CMD_OPTION('n'), strlen(CMD_OPTION('n')) + 1, 1, 0, 0, options TSRMLS_CC) == FAILURE) {
-		options->max_data = old_max_data;
-		RETURN_RESULT(XG(status), XG(reason), XDEBUG_ERROR_PROPERTY_NON_EXISTANT);
-	}
+
+        {
+            int add_var_retval;
+
+            XG(context).inhibit_notifications = 1;
+            add_var_retval = add_variable_node(*retval, CMD_OPTION_XDEBUG_STR('n'), 1, 0, 0, options TSRMLS_CC);
+            XG(context).inhibit_notifications = 0;
+
+            if (add_var_retval) {
+                    options->max_data = old_max_data;
+                    RETURN_RESULT(XG(status), XG(reason), XDEBUG_ERROR_PROPERTY_NON_EXISTENT);
+            }
+       }
+
 	options->max_data = old_max_data;
 }
 
