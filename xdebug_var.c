@@ -2108,11 +2108,6 @@ xdebug_xml_node* xdebug_get_zval_value_xml_node_ex(xdebug_str *name, zval *val, 
 
 				xdebug_str_destroy(&tmp_formatted_name);
 			} break;
-
-			case XDEBUG_VAR_TYPE_CONSTANT:
-				short_name = xdebug_str_copy(name);
-				full_name =  xdebug_str_copy(name);
-				break;
 		}
 
 		add_xml_attribute_or_element(options, node, "name", 4, short_name);
